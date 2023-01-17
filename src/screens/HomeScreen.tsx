@@ -200,8 +200,9 @@ export function HomeScreen() {
         <View style={{ alignItems: "center" }}>
         <View>
     </View>
-     <NumberInput onChange={setAmount} />
-          {true && [
+     
+          {pariObj && [
+            <NumberInput onChange={setAmount} />,
             <View style={{ flexDirection: "row", marginTop: '15px', marginBottom: '15px'}}>
               <View style={{ marginRight: 2 }}>
                 <Button
