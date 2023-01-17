@@ -1,6 +1,6 @@
-# xnft-quickstart-stacc
+# Hxro xNFT for Sandstorm Hackathon Workshop
 
-Quickstart repo for building your own xNFT. Updated by https://twitter.com/STACCoverflow, give him a follow :)
+This is an xNFT app project that helps you understand how you can build xNFTs and how to use Hxro's Parimutuel TS SDK
 
 ## Developing
 
