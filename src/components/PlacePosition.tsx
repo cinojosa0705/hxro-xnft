@@ -6,15 +6,15 @@ import {
   ParimutuelWeb3,
   WalletSigner,
   PositionSideEnum,
+  DEV_CONFIG,
 } from "@hxronetwork/parimutuelsdk";
-import * as web3 from "@solana/web3.js";
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+
+
 
 /**
  * PlacePosition is an async function that allows the user to place a position in a 
  * parimutuel market on the Hxro Network.
- * 
- * @param {ParimutuelWeb3} pari - The ParimutuelWeb3 instance that will be used to 
- * interact with the Parimutuel Network.
  * 
  * @param {string | undefined} selectedParimutuel - The public key of the parimutuel 
  * market that the user wants to place a position in.
@@ -25,28 +25,42 @@ import * as web3 from "@solana/web3.js";
  * @param {PositionSideEnum} positionSide - The side of the market that the user wants
  * to place a position in. (PositionSideEnum.BULL or PositionSideEnum.BEAR)
  * 
+ * @param {web3.Connection} Connection - Connection to the Solana blockchain via the users 
+ * connection
+ * 
  * @returns {Promise<void>}
  */
 
-async function PlacePosition(
-  pari: ParimutuelWeb3,
+const PlacePosition = async (
   selectedParimutuel: string | undefined,
   amount: string,
-  positionSide: PositionSideEnum
-) {
+  positionSide: PositionSideEnum,
+  connection: Connection
+) => {
+
+  const config = DEV_CONFIG;
+  const parimutuelWeb3 = new ParimutuelWeb3(config, connection);
+  console.log(parimutuelWeb3)
+
 
   try {
-
     // Check if user have selected a parimutuel
     if (!selectedParimutuel) {
         return console.error('No Parimutuel Key');
     }
 
+    const pariKey = new PublicKey(selectedParimutuel)
+
+    const wallet = window.xnft.solana
+
+
+    //DOES NOT WORK, HAVE TO FIX
+    //
     // Place position on the parimutuel market
-    const transactionId = await pari.placePosition(
-      window.xnft.solana as WalletSigner,
-      new web3.PublicKey(selectedParimutuel),
-      parseFloat(amount) * (10 ** 5 / 1),
+    const transactionId = await parimutuelWeb3.placePosition(
+      wallet as Keypair,
+      pariKey,
+      parseFloat(amount) * (10 ** 9 / 1),
       positionSide,
       Date.now()
     );
@@ -56,11 +70,15 @@ async function PlacePosition(
       console.log("ENTERED MARKET");
     } else if (!transactionId){
     console.log('TXN DIDN\'T GO THROUGH')
+
 }
     
   } catch (err) {
     console.error(err);
   }
+
+
 }
 
 export default PlacePosition;
+

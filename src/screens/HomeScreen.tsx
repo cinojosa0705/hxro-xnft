@@ -5,12 +5,13 @@
 // different UI components.
 //
 import React, { useEffect, useState } from "react";
-import * as web3 from "@solana/web3.js";
 import * as sdk from "@hxronetwork/parimutuelsdk";
-import { View, Text, Button, TextInput } from "react-native";
+import { View, Text, Button } from "react-native";
 import CoinPrice from "../components/CoinPrice";
 import PlacePosition from "../components/PlacePosition";
 import NumberInput from "../components/AmountInput";
+import { useSolanaConnection } from "../hooks/xnft-hooks";
+import { useDidLaunch } from "../hooks/xnft-hooks";
 
 
 //This defines an interface for an object that will contain information about a 
@@ -39,17 +40,23 @@ export function HomeScreen() {
   // market pubkeys for a specific market (BTCUSD) and filters them by duration 
   // (60 seconds).
   //
-  const connection = new web3.Connection(
-    web3.clusterApiUrl('devnet'),
-    "confirmed"
-  );
-  
+  const connection = useSolanaConnection()
+  // If you want to use Mainnet, you can use my RPC :)
+  // (shoutout to Chainstack for their great RPC Infra)
   //"https://nd-766-247-352.p2pify.com/7f6912c309394d5b9295888ebb57b076"
+
+
   const config = sdk.DEV_CONFIG;
+  // For mainnet you can use sdk.MAINNET_CONFIG
+
   const parimutuelWeb3 = new sdk.ParimutuelWeb3(config, connection);
   const market = sdk.MarketPairEnum.BTCUSD;
   const markets = sdk.getMarketPubkeys(config, market);
   const marketsByTime = markets.filter((market) => market.duration === 60 * 5);
+
+  // Returns true if the `window.xnft` object is ready to be used.
+  const didLaunch = useDidLaunch()
+ 
 
   //This useEffect function fetches the parimutuel markets using the getParimutuels 
   //method from the parimutuelWeb3 instance, and filters them by the current time window.
@@ -72,28 +79,25 @@ export function HomeScreen() {
         // the calculateOdd method from the SDK.
         //
         const longPool =
-          pari_markets[0].info.parimutuel.activeLongPositions.toNumber() /
-          1000000000;
+          (pari_markets[0].info.parimutuel.activeLongPositions.toNumber() /
+          1000000000);
         const shortPool =
           pari_markets[0].info.parimutuel.activeShortPositions.toNumber() /
           1000000000;
-        const longOdds = sdk.calculateOdd(longPool, longPool + shortPool);
-        const shortOdds = sdk.calculateOdd(shortPool, longPool + shortPool);
+        const longOdds = sdk.calculateNetOdd(longPool, longPool + shortPool, 0.03);
+        const shortOdds = sdk.calculateNetOdd(shortPool, longPool + shortPool, 0.03);
         const pubkey = pari_markets[0].pubkey.toString();
         const locksTime = pari_markets[0].info.parimutuel.timeWindowStart.toNumber()
 
         // This formats the locks countdown timer
-          var formattedTime = "0:0:0";
+          var formattedTime = "00:00:00";
           if (locksTime) {
-            var s = locksTime - new Date().getTime();
-            var ms = s % 1000;
-            s = (s - ms) / 1000;
-            var secs = s % 60;
-            s = (s - secs) / 60;
-            var mins = s % 60;
-            var hrs = (s - mins) / 60;
-      
-            formattedTime = hrs + ":" + mins + ":" + secs;
+            const currentTime = new Date().getTime();
+            const timeDiff = locksTime - currentTime;
+            const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            formattedTime = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`
           }
           setCountDownTime(formattedTime);
 
@@ -149,7 +153,7 @@ export function HomeScreen() {
         fontSize: '15px',
         fontWeight: 'bold'
       }}>
-        1-min parimutuel market
+        5-min parimutuel market
         </Text>
       <View
         style={{
@@ -201,7 +205,7 @@ export function HomeScreen() {
         <View>
     </View>
      
-          {pariObj && [
+          {pariObj && didLaunch && [
             <NumberInput onChange={setAmount} />,
             <View style={{ flexDirection: "row", marginTop: '15px', marginBottom: '15px'}}>
               <View style={{ marginRight: 2 }}>
@@ -210,10 +214,10 @@ export function HomeScreen() {
                   title="Long"
                   onPress={() => {
                     PlacePosition(
-                      parimutuelWeb3,
                       pariObj?.pubkey,
                       amount.toString(),
-                      sdk.PositionSideEnum.LONG
+                      sdk.PositionSideEnum.LONG,
+                      connection
                     );
                     console.log(`Entered ${amount} USDC LONG position!`)
                   }}
@@ -225,10 +229,10 @@ export function HomeScreen() {
                   color="red"
                   onPress={() => {
                     PlacePosition(
-                      parimutuelWeb3,
                       pariObj?.pubkey,
                       amount.toString(),
-                      sdk.PositionSideEnum.SHORT
+                      sdk.PositionSideEnum.SHORT,
+                      connection
                     );
                     console.log(`Entered ${amount} USDC SHORT position!`)
                   }}
