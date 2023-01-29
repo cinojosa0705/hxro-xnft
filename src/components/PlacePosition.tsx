@@ -54,11 +54,12 @@ const PlacePosition = async (
     const wallet = window.xnft.solana
 
 
-    //DOES NOT WORK, HAVE TO FIX
+    // DOES NOT WORK, HAVE TO FIX
+    // Problem: my guess is that its the window.xnft.solana that is not working with how the SDK has set up WalletSigner...
     //
     // Place position on the parimutuel market
     const transactionId = await parimutuelWeb3.placePosition(
-      wallet as Keypair,
+      wallet as WalletSigner,
       pariKey,
       parseFloat(amount) * (10 ** 9 / 1),
       positionSide,
