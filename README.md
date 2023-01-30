@@ -4,15 +4,15 @@ This is an xNFT app project that helps you understand how you can build xNFTs an
 
 This project uses this template: https://github.com/cinojosa0705/xnft-template-stacc
 
+Further documentation: 
+
+  * [xNFT Docs](https://docs.xnfts.dev/getting-started/getting-started)
+  * [Typescript Parimutuel SDK][https://www.npmjs.com/package/@hxronetwork/parimutuelsdk]
+  * [{HxroByExample}: Parimutuel TS SDK QuickStart][https://wiry-node-147.notion.site/Typescript-SDK-QuickStart-090b58f314b04f7ea6b88a1714450b9a]
+
 ## Developing
 
 Once you've installed Backpack, get started building your xNFT with these steps. Note that the packages here will always use the latest, which correspond to the latest tagged build of Backpack. If you have unexepected issues, make sure your package versions match the app version.
-
-Further documentation: 
-
-  -(xNFT Docs)[https://docs.xnfts.dev/getting-started/getting-started]
-  -(Typescript Parimutuel SDK)[https://www.npmjs.com/package/@hxronetwork/parimutuelsdk]
-  -({HxroByExample}: Parimutuel TS SDK QuickStart)[https://wiry-node-147.notion.site/Typescript-SDK-QuickStart-090b58f314b04f7ea6b88a1714450b9a]
 
 ### Install
 
