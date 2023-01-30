@@ -7,8 +7,8 @@ This project uses this template: https://github.com/cinojosa0705/xnft-template-s
 Further documentation: 
 
   * [xNFT Docs](https://docs.xnfts.dev/getting-started/getting-started)
-  * [Typescript Parimutuel SDK][https://www.npmjs.com/package/@hxronetwork/parimutuelsdk]
-  * [{HxroByExample}: Parimutuel TS SDK QuickStart][https://wiry-node-147.notion.site/Typescript-SDK-QuickStart-090b58f314b04f7ea6b88a1714450b9a]
+  * [Typescript Parimutuel SDK](https://www.npmjs.com/package/@hxronetwork/parimutuelsdk)
+  * [{HxroByExample}: Parimutuel TS SDK QuickStart](https://wiry-node-147.notion.site/Typescript-SDK-QuickStart-090b58f314b04f7ea6b88a1714450b9a)
 
 ## Developing
 
