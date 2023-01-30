@@ -4,7 +4,7 @@ This is an xNFT app project that helps you understand how you can build xNFTs an
 
 This project uses this template: https://github.com/cinojosa0705/xnft-template-stacc
 
-Further documentation: 
+## Further Documentation: 
 
   * [xNFT Docs](https://docs.xnfts.dev/getting-started/getting-started)
   * [Typescript Parimutuel SDK](https://www.npmjs.com/package/@hxronetwork/parimutuelsdk)
